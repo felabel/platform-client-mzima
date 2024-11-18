@@ -5,7 +5,9 @@ const loginFunctions = new LoginFunctions();
 
 class DataViewFunctions {
   click_data_view_btn() {
-    cy.get(DataViewLocators.dataViewBtn).click();
+    cy.get(DataViewLocators.dataViewBtn)
+      .should('be.visible') // Ensure the button is visible
+      .click({ force: true }); // Force the click action
     cy.url().should('include', '/feed');
   }
 
@@ -24,6 +26,36 @@ class DataViewFunctions {
     cy.get(DataViewLocators.postPreview)
       .children(DataViewLocators.postItem)
       .contains('Automated Title Response');
+  }
+  search_and_verify_results(keyword) {
+    this.click_data_view_btn();
+    cy.get(DataViewLocators.searchInput).clear({ force: true }).type(keyword, { force: true });
+
+    // Wait for the API request to fetch results
+    cy.intercept('GET', '**/api/v5/posts/stats*').as('searchResults');
+    cy.wait('@searchResults');
+
+    // Verify that results contain the keyword in the title or description
+    cy.get(DataViewLocators.postPreview).within(() => {
+      cy.get(DataViewLocators.postItem).each(($post) => {
+        cy.wrap($post)
+          .invoke('text')
+          .then((text) => {
+            expect(text.toLowerCase()).to.include(keyword.toLowerCase());
+          });
+      });
+    });
+  }
+  search_and_verify_results_with_special_characters(keyword) {
+    const specialCharacterRegex = /^[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]+$/;
+    if (!specialCharacterRegex.test(keyword)) {
+      throw new Error('Provided keyword does not contain only special characters');
+    }
+
+    this.click_data_view_btn();
+    cy.get(DataViewLocators.searchInput).clear({ force: true }).type(keyword, { force: true });
+
+    cy.get(DataViewLocators.postsEmptyMessage).should('be.visible');
   }
 }
 
