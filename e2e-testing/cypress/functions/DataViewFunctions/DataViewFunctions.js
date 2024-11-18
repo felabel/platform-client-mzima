@@ -5,9 +5,7 @@ const loginFunctions = new LoginFunctions();
 
 class DataViewFunctions {
   click_data_view_btn() {
-    cy.get(DataViewLocators.dataViewBtn)
-      .should('be.visible') // Ensure the button is visible
-      .click({ force: true }); // Force the click action
+    cy.get(DataViewLocators.dataViewBtn).should('be.visible').click({ force: true });
     cy.url().should('include', '/feed');
   }
 
@@ -54,7 +52,6 @@ class DataViewFunctions {
 
     this.click_data_view_btn();
     cy.get(DataViewLocators.searchInput).clear({ force: true }).type(keyword, { force: true });
-
     cy.get(DataViewLocators.postsEmptyMessage).should('be.visible');
   }
 }
