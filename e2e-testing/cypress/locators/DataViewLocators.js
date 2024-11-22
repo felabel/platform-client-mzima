@@ -18,7 +18,7 @@ const DataViewLocators = {
   publishPostBtn: '[data-qa="btn-publish-post"]',
 
   postDetails: '[data-qa="post-details"]',
-  searchInput: '[data-qa="search-form__search-posts"]',
+  searchInput: '[data-qa="search-form-search-posts"]',
   postsEmptyMessage: '[data-qa="posts-empty"]',
 };
 
