@@ -46,13 +46,15 @@ class DataViewFunctions {
   }
   search_and_verify_results_with_special_characters(keyword) {
     const specialCharacterRegex = /^[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]+$/;
+    // remove
     if (!specialCharacterRegex.test(keyword)) {
       throw new Error('Provided keyword does not contain only special characters');
     }
-
     this.click_data_view_btn();
     cy.get(DataViewLocators.searchInput).clear({ force: true }).type(keyword, { force: true });
-    cy.get(DataViewLocators.postsEmptyMessage).should('be.visible');
+    cy.get(DataViewLocators.postsEmptyMessage)
+      .should('be.visible')
+      .and('contain.text', 'No posts match your keyword search');
   }
 }
 
