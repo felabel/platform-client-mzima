@@ -1,8 +1,15 @@
 import DataViewFunctions from '../../functions/DataViewFunctions/DataViewFunctions';
+import LoginFunctions from '../../functions/LoginFunctions';
+
 const dataViewFunctions = new DataViewFunctions();
+import PostFunctions from '../../functions/PostsFunctions/PostFunctions';
 
 describe('Search and Verify Posts', () => {
+  const loginFunctions = new LoginFunctions();
+  const postFunctions = new PostFunctions();
+
   beforeEach(() => {
+    loginFunctions.login_as_admin();
     cy.visit(Cypress.env('baseUrl'));
   });
 
